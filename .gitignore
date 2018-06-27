@@ -1,0 +1,4 @@
+.idea/
+target/
+src/main/resources/config_private.properties
+discordee.iml
