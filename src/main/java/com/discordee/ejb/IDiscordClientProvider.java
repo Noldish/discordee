@@ -1,12 +1,13 @@
 package com.discordee.ejb;
 
-import com.discordee.ejb.supply.AnnotationListener;
 import java.util.Optional;
 import javax.annotation.PostConstruct;
+import javax.annotation.PreDestroy;
 import javax.ejb.DependsOn;
 import javax.ejb.Singleton;
 import javax.ejb.Startup;
 import javax.inject.Inject;
+import javax.persistence.PostRemove;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import sx.blah.discord.api.ClientBuilder;
@@ -17,13 +18,19 @@ import sx.blah.discord.util.DiscordException;
 @Singleton
 @Startup
 @DependsOn("GlobalProperties")
-public class DiscordClientProvider {
+public class IDiscordClientProvider {
 
-    private final Logger logger = LogManager.getLogger("DiscordClientProvider");
+    private final Logger logger = LogManager.getLogger("IDiscordClientProvider");
     private IDiscordClient client = null;
 
     @Inject
     private GlobalProperties properties;
+
+    @Inject
+    private DiscordMessageListener messageListener;
+
+    @Inject
+    private DiscordMentionListener mentionListener;
 
     @PostConstruct
     public void init() {
@@ -38,7 +45,12 @@ public class DiscordClientProvider {
         }
 
         assert client != null;
-        initEventDispatchers();
+        registerEventDispatchers();
+    }
+
+    @PreDestroy
+    public void destroy() {
+        client.logout();
     }
 
     public IDiscordClient getClient() {
@@ -56,8 +68,9 @@ public class DiscordClientProvider {
         }
     }
 
-    private void initEventDispatchers(){
+    private void registerEventDispatchers() {
         EventDispatcher dispatcher = client.getDispatcher();
-        dispatcher.registerListener(new AnnotationListener());
+        dispatcher.registerListener(this.messageListener);
+        dispatcher.registerListener(this.mentionListener);
     }
 }
