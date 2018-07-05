@@ -1,8 +1,9 @@
 package com.discordee.dto;
 
+import java.io.Serializable;
 import java.util.List;
 
-public class ForecastResponse {
+public class ForecastResponse implements Serializable {
 
     private Double latitude;
     private Double longitude;

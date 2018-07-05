@@ -1,6 +1,8 @@
 package com.discordee.dto;
 
-public class Currently {
+import java.io.Serializable;
+
+public class Currently implements Serializable {
 
     private Integer time;
     private String summary;

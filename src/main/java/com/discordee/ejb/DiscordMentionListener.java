@@ -17,9 +17,8 @@ public class DiscordMentionListener {
     public void onMentionEvent(MentionEvent event) {
         IMessage message = event.getMessage();
         discordClient.addReaction(message);
-
-        if (event.getAuthor().getName().equals("Nold"))
-            discordClient.replyAbountWeather(event.getMessage());
+        
+        discordClient.replyAbountWeather(event.getMessage());
     }
 
 }

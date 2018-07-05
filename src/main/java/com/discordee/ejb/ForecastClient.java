@@ -1,5 +1,6 @@
 package com.discordee.ejb;
 
+import com.discordee.config.WeatherCache;
 import com.discordee.dto.City;
 import com.discordee.dto.ForecastResponse;
 import java.time.Instant;
@@ -11,6 +12,7 @@ import javax.json.bind.Jsonb;
 import javax.json.bind.JsonbBuilder;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.infinispan.Cache;
 import tk.plogitech.darksky.forecast.APIKey;
 import tk.plogitech.darksky.forecast.DarkSkyClient;
 import tk.plogitech.darksky.forecast.ForecastException;
@@ -27,6 +29,9 @@ public class ForecastClient {
 
     @Inject
     private GlobalProperties properties;
+
+    @Inject
+    private Cache<String, List<ForecastResponse>> cache;
 
     public ForecastResponse getForecast(Double longitude, Double latitude) {
         try {
@@ -53,14 +58,22 @@ public class ForecastClient {
     }
 
     public List<ForecastResponse> getForecastsByCityList(List<City> cities) {
-        return cities.stream()
-                .map(c -> {
-                    ForecastResponse r = getForecast(Double.valueOf(c.getLongitude()), Double.valueOf(c.getLatitude()));
-                    r.setCityName(c.getName());
-                    r.setResidents(c.getResidents());
-                    return r;
-                })
-                .collect(Collectors.toList());
+
+        List<ForecastResponse> cachedValue = cache.get("weather");
+        if (cachedValue == null) {
+            cachedValue = cities.stream()
+                    .map(c -> {
+                        ForecastResponse r = getForecast(Double.valueOf(c.getLongitude()),
+                                Double.valueOf(c.getLatitude()));
+                        r.setCityName(c.getName());
+                        r.setResidents(c.getResidents());
+                        return r;
+                    })
+                    .collect(Collectors.toList());
+            cache.put("weather", cachedValue);
+        }
+
+        return cachedValue;
     }
 
     private ForecastResponse convertJson(String json) {

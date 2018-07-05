@@ -70,7 +70,7 @@ public class DiscordClient {
                 .sorted(Comparator
                         .comparingLong(o -> o.getCurrently().getTemperature().longValue()))
                 .map((f) -> {
-                    Long temp = f.getCurrently().getApparentTemperature().longValue();
+                    Long temp = f.getCurrently().getTemperature().longValue();
                     String city = f.getCityName();
 
                     return String.format("%20s %3d°С   \n", city, temp);
