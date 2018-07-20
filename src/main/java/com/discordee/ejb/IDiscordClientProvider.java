@@ -1,5 +1,8 @@
 package com.discordee.ejb;
 
+import com.discordee.config.GlobalProperties;
+import com.discordee.ejb.listener.DiscordMentionListener;
+import com.discordee.ejb.listener.DiscordMessageListener;
 import java.util.Optional;
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
@@ -7,9 +10,8 @@ import javax.ejb.DependsOn;
 import javax.ejb.Singleton;
 import javax.ejb.Startup;
 import javax.inject.Inject;
-import javax.persistence.PostRemove;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import sx.blah.discord.api.ClientBuilder;
 import sx.blah.discord.api.IDiscordClient;
 import sx.blah.discord.api.events.EventDispatcher;
@@ -20,7 +22,7 @@ import sx.blah.discord.util.DiscordException;
 @DependsOn("GlobalProperties")
 public class IDiscordClientProvider {
 
-    private final Logger logger = LogManager.getLogger("IDiscordClientProvider");
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
     private IDiscordClient client = null;
 
     @Inject

@@ -1,5 +1,6 @@
-package com.discordee.ejb;
+package com.discordee.ejb.listener;
 
+import com.discordee.ejb.DiscordClient;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 import sx.blah.discord.api.events.EventSubscriber;

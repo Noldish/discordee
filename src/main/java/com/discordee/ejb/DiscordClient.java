@@ -3,12 +3,9 @@ package com.discordee.ejb;
 import com.discordee.dto.City;
 import com.discordee.dto.ForecastResponse;
 import java.io.InputStream;
-import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Comparator;
-import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -18,6 +15,7 @@ import javax.json.bind.Jsonb;
 import javax.json.bind.JsonbBuilder;
 import sx.blah.discord.handle.obj.IEmoji;
 import sx.blah.discord.handle.obj.IMessage;
+import sx.blah.discord.util.MessageHistory;
 
 @Stateless
 public class DiscordClient {
@@ -67,8 +65,7 @@ public class DiscordClient {
             List<String> losers) {
 
         List<String> formattedForecasts = forecastResults.stream()
-                .sorted(Comparator
-                        .comparingLong(o -> o.getCurrently().getTemperature().longValue()))
+                .sorted(Comparator.comparingLong(o -> o.getCurrently().getTemperature().longValue()))
                 .map((f) -> {
                     Long temp = f.getCurrently().getTemperature().longValue();
                     String city = f.getCityName();
@@ -81,11 +78,11 @@ public class DiscordClient {
 
         formattedForecasts.forEach(outputMessage::append);
 
-        outputMessage.append("\n");
-        outputMessage.append("Победители по жизни: ").append(winners).append("\n");
-        outputMessage.append("Повезет в следующий раз: ").append(losers);
+        outputMessage.append("\n")
+                .append("Победители по жизни: ").append(winners).append("\n")
+                .append("Повезет в следующий раз: ").append(losers).append("\n")
+                .append("```");
 
-        outputMessage.append("```");
         return outputMessage.toString();
     }
 
@@ -98,4 +95,13 @@ public class DiscordClient {
         return jsonb.fromJson(inputStream, new ArrayList<City>() {
         }.getClass().getGenericSuperclass());
     }
+
+//    public void countEmojiUsage() {
+//
+//        MessageHistory messageHistory = clientProvider.getClient().getGuildByID(228216735352881152L)
+//                .getChannelByID(235804189240852480L).getFullMessageHistory();
+//
+//        messageHistory.
+//
+//    }
 }

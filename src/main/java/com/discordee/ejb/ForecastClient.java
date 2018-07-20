@@ -1,18 +1,18 @@
 package com.discordee.ejb;
 
+import com.discordee.config.GlobalProperties;
 import com.discordee.config.WeatherCache;
 import com.discordee.dto.City;
 import com.discordee.dto.ForecastResponse;
-import java.time.Instant;
 import java.util.List;
 import java.util.stream.Collectors;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.json.bind.Jsonb;
 import javax.json.bind.JsonbBuilder;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.infinispan.Cache;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import tk.plogitech.darksky.forecast.APIKey;
 import tk.plogitech.darksky.forecast.DarkSkyClient;
 import tk.plogitech.darksky.forecast.ForecastException;
@@ -25,12 +25,12 @@ import tk.plogitech.darksky.forecast.model.Longitude;
 @Stateless
 public class ForecastClient {
 
-    private final Logger logger = LogManager.getLogger("ForecastClient");
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @Inject
     private GlobalProperties properties;
 
-    @Inject
+    @Inject @WeatherCache
     private Cache<String, List<ForecastResponse>> cache;
 
     public ForecastResponse getForecast(Double longitude, Double latitude) {
