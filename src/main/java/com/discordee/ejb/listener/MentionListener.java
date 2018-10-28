@@ -9,7 +9,7 @@ import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedE
 import sx.blah.discord.handle.obj.IMessage;
 
 @Stateless
-public class DiscordMentionListener {
+public class MentionListener {
 
     @Inject
     private DiscordClient discordClient;
@@ -19,7 +19,7 @@ public class DiscordMentionListener {
         IMessage message = event.getMessage();
         discordClient.addReaction(message);
         
-        discordClient.replyAbountWeather(event.getMessage());
+        discordClient.replyAboutWeather(event.getMessage());
     }
 
 }

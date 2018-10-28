@@ -32,7 +32,7 @@ public class DiscordClient {
         emoji.ifPresent(message::addReaction);
     }
 
-    public void replyAbountWeather(IMessage message) {
+    public void replyAboutWeather(IMessage message) {
 
         List<City> cities = getKotiksCities();
 

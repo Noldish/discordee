@@ -1,8 +1,8 @@
 package com.discordee.ejb;
 
 import com.discordee.config.GlobalProperties;
-import com.discordee.ejb.listener.DiscordMentionListener;
-import com.discordee.ejb.listener.DiscordMessageListener;
+import com.discordee.ejb.listener.MentionListener;
+import com.discordee.ejb.listener.MessageListener;
 import java.util.Optional;
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
@@ -29,10 +29,10 @@ public class IDiscordClientProvider {
     private GlobalProperties properties;
 
     @Inject
-    private DiscordMessageListener messageListener;
+    private MessageListener messageListener;
 
     @Inject
-    private DiscordMentionListener mentionListener;
+    private MentionListener mentionListener;
 
     @PostConstruct
     public void init() {
