@@ -22,7 +22,7 @@ public class GlobalProperties {
     public void init() {
         try {
             InputStream inputStream = this.getClass().getClassLoader()
-                .getResourceAsStream("config_private.properties");
+                .getResourceAsStream("config-private.properties");
 
             properties = new Properties();
             properties.load(inputStream);
