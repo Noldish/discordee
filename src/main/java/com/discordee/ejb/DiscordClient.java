@@ -13,9 +13,10 @@ import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.json.bind.Jsonb;
 import javax.json.bind.JsonbBuilder;
+import sx.blah.discord.api.internal.json.objects.EmbedObject;
 import sx.blah.discord.handle.obj.IEmoji;
 import sx.blah.discord.handle.obj.IMessage;
-import sx.blah.discord.util.MessageHistory;
+import sx.blah.discord.util.EmbedBuilder;
 
 @Stateless
 public class DiscordClient {
@@ -56,9 +57,19 @@ public class DiscordClient {
                 .flatMap(Collection::stream)
                 .collect(Collectors.toList());
 
-        String outputMessage = buildWeatherResponse(forecasts, winners, losers);
+        EmbedObject embedObject = buildWeatherResponseWithLogo(forecasts, winners, losers);
 
-        message.getChannel().sendMessage(outputMessage);
+        message.getChannel().sendMessage(embedObject);
+    }
+    
+    private EmbedObject buildWeatherResponseWithLogo(List<ForecastResponse> forecastResults, List<String> winners,
+            List<String> losers) {
+        EmbedBuilder builder = new EmbedBuilder();
+        builder.withImage("https://media.discordapp.net/attachments/235804189240852480/540483625947234305/orda111.png?width=400&height=48");
+
+        builder.appendField("Погодка", buildWeatherResponse(forecastResults, winners, losers), false);
+
+        return builder.build();
     }
 
     private String buildWeatherResponse(List<ForecastResponse> forecastResults, List<String> winners,
@@ -88,7 +99,7 @@ public class DiscordClient {
 
     private List<City> getKotiksCities() {
 
-        InputStream inputStream = this.getClass().getClassLoader().getResourceAsStream("city_list.json");
+        InputStream inputStream = this.getClass().getClassLoader().getResourceAsStream("city-list.json");
 
         Jsonb jsonb = JsonbBuilder.create();
 
@@ -96,12 +107,4 @@ public class DiscordClient {
         }.getClass().getGenericSuperclass());
     }
 
-//    public void countEmojiUsage() {
-//
-//        MessageHistory messageHistory = clientProvider.getClient().getGuildByID(228216735352881152L)
-//                .getChannelByID(235804189240852480L).getFullMessageHistory();
-//
-//        messageHistory.
-//
-//    }
 }
