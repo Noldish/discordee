@@ -2,4 +2,3 @@
 target/
 src/main/resources/config_private.properties
 discordee.iml
-src/main/resources/city_list.json
