@@ -1,113 +1,143 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0"
-  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-  <modelVersion>4.0.0</modelVersion>
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
 
-  <groupId>com</groupId>
-  <artifactId>discordee</artifactId>
-  <version>1.0-SNAPSHOT</version>
-  <packaging>war</packaging>
+    <groupId>com</groupId>
+    <artifactId>discordee</artifactId>
+    <version>1.0-SNAPSHOT</version>
+    <packaging>war</packaging>
 
-  <properties>
-    <maven.compiler.source>1.8</maven.compiler.source>
-    <maven.compiler.target>1.8</maven.compiler.target>
-    <infinispan.version>9.2.4.Final</infinispan.version>
-    <version.thorntail>2.3.0.Final</version.thorntail>
-    <failOnMissingWebXml>false</failOnMissingWebXml>
-    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-  </properties>
+    <properties>
+        <maven.compiler.source>1.8</maven.compiler.source>
+        <maven.compiler.target>1.8</maven.compiler.target>
 
-  <repositories>
-    <repository>
-      <id>jcenter</id>
-      <url>http://jcenter.bintray.com</url>
-    </repository>
-  </repositories>
+        <infinispan.version>9.2.4.Final</infinispan.version>
+        <cdi-unit-version>4.1.0</cdi-unit-version>
+        <weld.version>3.1.1.Final</weld.version>
 
-  <build>
-    <finalName>discordee</finalName>
+        <version.h2>1.4.187</version.h2>
 
-    <plugins>
-      <plugin>
-        <groupId>io.thorntail</groupId>
-        <artifactId>thorntail-maven-plugin</artifactId>
-        <version>${version.thorntail}</version>
+        <failOnMissingWebXml>false</failOnMissingWebXml>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    </properties>
 
-        <executions>
-          <execution>
-            <goals>
-              <goal>package</goal>
-            </goals>
-            <configuration>
-              <hollow>true</hollow>
-            </configuration>
-          </execution>
-        </executions>
-      </plugin>
-    </plugins>
-  </build>
+    <repositories>
+        <repository>
+            <id>jcenter</id>
+            <url>http://jcenter.bintray.com</url>
+        </repository>
+    </repositories>
 
-  <dependencyManagement>
+    <build>
+        <finalName>discordee</finalName>
+    </build>
+
     <dependencies>
-      <dependency>
-        <groupId>io.thorntail</groupId>
-        <artifactId>bom-all</artifactId>
-        <version>${version.thorntail}</version>
-        <scope>import</scope>
-        <type>pom</type>
-      </dependency>
+
+        <!--    CORE-->
+
+        <dependency>
+            <groupId>javax</groupId>
+            <artifactId>javaee-api</artifactId>
+            <version>8.0</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.eclipse.microprofile</groupId>
+            <artifactId>microprofile</artifactId>
+            <version>2.1</version>
+            <type>pom</type>
+        </dependency>
+
+        <!--    TECHNICAL-->
+
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>1.18.8</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>1.7.25</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.h2database</groupId>
+            <artifactId>h2</artifactId>
+            <version>${version.h2}</version>
+        </dependency>
+
+        <!--    CACHING-->
+
+        <dependency>
+            <groupId>org.infinispan</groupId>
+            <artifactId>infinispan-core</artifactId>
+            <version>${infinispan.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.infinispan</groupId>
+            <artifactId>infinispan-cdi-embedded</artifactId>
+            <version>${infinispan.version}</version>
+        </dependency>
+
+        <!--    LOGIC-->
+
+        <dependency>
+            <groupId>com.discord4j</groupId>
+            <artifactId>discord4j-core</artifactId>
+            <version>3.0.6</version>
+        </dependency>
+
+        <dependency>
+            <groupId>tk.plogitech</groupId>
+            <artifactId>darksky-forecast-api</artifactId>
+            <version>1.3.0</version>
+        </dependency>
+
+
+        <!--    TESTING-->
+
+        <dependency>
+            <groupId>org.jglue.cdi-unit</groupId>
+            <artifactId>cdi-unit</artifactId>
+            <version>${cdi-unit-version}</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.jboss.weld.se</groupId>
+            <artifactId>weld-se-core</artifactId>
+            <version>${weld.version}</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.jboss.weld.module</groupId>
+            <artifactId>weld-web</artifactId>
+            <version>${weld.version}</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-core</artifactId>
+            <version>2.28.2</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.12</version>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
-  </dependencyManagement>
-
-  <dependencies>
-
-    <dependency>
-      <groupId>javax</groupId>
-      <artifactId>javaee-api</artifactId>
-      <version>8.0</version>
-    </dependency>
-
-    <dependency>
-      <groupId>com.discord4j</groupId>
-      <artifactId>Discord4J</artifactId>
-      <version>2.10.1</version>
-    </dependency>
-
-    <!-- https://mvnrepository.com/artifact/org.slf4j/slf4j-api -->
-    <dependency>
-      <groupId>org.slf4j</groupId>
-      <artifactId>slf4j-api</artifactId>
-      <version>1.7.25</version>
-    </dependency>
-
-
-    <dependency>
-      <groupId>tk.plogitech</groupId>
-      <artifactId>darksky-forecast-api</artifactId>
-      <version>1.3.0</version>
-    </dependency>
-
-    <dependency>
-      <groupId>org.junit.jupiter</groupId>
-      <artifactId>junit-jupiter-api</artifactId>
-      <version>5.1.0</version>
-      <scope>test</scope>
-    </dependency>
-
-    <dependency>
-      <groupId>org.infinispan</groupId>
-      <artifactId>infinispan-core</artifactId>
-      <version>${infinispan.version}</version>
-    </dependency>
-
-    <dependency>
-      <groupId>org.infinispan</groupId>
-      <artifactId>infinispan-cdi-embedded</artifactId>
-      <version>${infinispan.version}</version>
-    </dependency>
-
-  </dependencies>
 
 
 </project>

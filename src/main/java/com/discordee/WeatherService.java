@@ -1,44 +1,53 @@
-package com.discordee.ejb;
+package com.discordee;
 
+import com.discordee.client.ForecastClient;
+import com.discordee.config.WeatherCache;
 import com.discordee.dto.City;
 import com.discordee.dto.ForecastResponse;
-import java.io.InputStream;
-import java.util.ArrayList;
+import org.infinispan.Cache;
+
+import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Inject;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
-import javax.ejb.Stateless;
-import javax.inject.Inject;
-import javax.json.bind.Jsonb;
-import javax.json.bind.JsonbBuilder;
-import sx.blah.discord.api.internal.json.objects.EmbedObject;
-import sx.blah.discord.handle.obj.IEmoji;
-import sx.blah.discord.handle.obj.IMessage;
-import sx.blah.discord.util.EmbedBuilder;
 
-@Stateless
-public class DiscordClient {
-
-    @Inject
-    private IDiscordClientProvider clientProvider;
+@ApplicationScoped
+public class WeatherService {
 
     @Inject
     private ForecastClient forecastClient;
 
-    public void addReaction(IMessage message) {
-        Optional<IEmoji> emoji = Optional.ofNullable(message.getGuild().getEmojiByName("here"));
+    @Inject
+    @WeatherCache
+    private Cache<String, List<ForecastResponse>> cache;
 
-        emoji.ifPresent(message::addReaction);
+    @Inject
+    private List<City> defaultCities;
+
+    public List<ForecastResponse> getWeather() {
+        List<ForecastResponse> cachedValue = cache.get("weather");
+
+        if (cachedValue == null) {
+            List<ForecastResponse> forecastsByCityList = forecastClient.getForecastsByCityList(defaultCities);
+            cache.put("weather", forecastsByCityList);
+            return forecastsByCityList;
+        } else {
+            return cachedValue;
+        }
     }
 
-    public void replyAboutWeather(IMessage message) {
+    public ForecastResponse getWeatherByCityName(String name) {
+        City city = defaultCities.stream().filter(c -> name.equals(c.getName())).findAny().orElseThrow(IllegalArgumentException::new);
+        return forecastClient.getForecastByCity(city);
+    }
 
-        List<City> cities = getKotiksCities();
+    public String getWeatherReport() {
+        return buildWeatherResponse(getWeather());
+    }
 
-        List<ForecastResponse> forecasts = forecastClient.getForecastsByCityList(cities);
-
+    private String buildWeatherResponse(List<ForecastResponse> forecasts) {
         Long maxTemp = forecasts.stream().map(f -> f.getCurrently().getTemperature().longValue())
                 .max(Comparator.comparingLong(Long::longValue)).get();
 
@@ -57,23 +66,11 @@ public class DiscordClient {
                 .flatMap(Collection::stream)
                 .collect(Collectors.toList());
 
-        EmbedObject embedObject = buildWeatherResponseWithLogo(forecasts, winners, losers);
-
-        message.getChannel().sendMessage(embedObject);
-    }
-    
-    private EmbedObject buildWeatherResponseWithLogo(List<ForecastResponse> forecastResults, List<String> winners,
-            List<String> losers) {
-        EmbedBuilder builder = new EmbedBuilder();
-        builder.withImage("https://media.discordapp.net/attachments/235804189240852480/540483625947234305/orda111.png?width=400&height=48");
-
-        builder.appendField("Погодка", buildWeatherResponse(forecastResults, winners, losers), false);
-
-        return builder.build();
+        return buildWeatherResponse(forecasts, winners, losers);
     }
 
     private String buildWeatherResponse(List<ForecastResponse> forecastResults, List<String> winners,
-            List<String> losers) {
+                                        List<String> losers) {
 
         List<String> formattedForecasts = forecastResults.stream()
                 .sorted(Comparator.comparingLong(o -> o.getCurrently().getTemperature().longValue()))
@@ -96,15 +93,4 @@ public class DiscordClient {
 
         return outputMessage.toString();
     }
-
-    private List<City> getKotiksCities() {
-
-        InputStream inputStream = this.getClass().getClassLoader().getResourceAsStream("city-list.json");
-
-        Jsonb jsonb = JsonbBuilder.create();
-
-        return jsonb.fromJson(inputStream, new ArrayList<City>() {
-        }.getClass().getGenericSuperclass());
-    }
-
 }
