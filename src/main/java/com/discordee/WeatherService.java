@@ -5,6 +5,8 @@ import com.discordee.config.WeatherCache;
 import com.discordee.dto.City;
 import com.discordee.dto.ForecastResponse;
 import org.infinispan.Cache;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
@@ -15,6 +17,8 @@ import java.util.stream.Collectors;
 
 @ApplicationScoped
 public class WeatherService {
+
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @Inject
     private ForecastClient forecastClient;
@@ -44,7 +48,12 @@ public class WeatherService {
     }
 
     public String getWeatherReport() {
-        return buildWeatherResponse(getWeather());
+        try {
+            return buildWeatherResponse(getWeather());
+        } catch (Exception ex){
+            logger.error("Exception brother", ex);
+            return "404";
+        }
     }
 
     private String buildWeatherResponse(List<ForecastResponse> forecasts) {
