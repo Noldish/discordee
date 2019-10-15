@@ -20,19 +20,22 @@ public class WeatherApi {
     @Autowired
     private WeatherRequestRepository requestRepository;
 
-    @GetMapping("/weather/{cityName}")
+    @GetMapping("weather")
+    public List<ForecastResponse> getWeather() {
+        return weatherService.getWeather();
+    }
+
+    @GetMapping("weather/{cityName}")
     @Transactional
-    public ForecastResponse getWeatherByCityName(@PathVariable("cityName") String cityName){
+    public ForecastResponse getWeatherByCityName(@PathVariable("cityName") String cityName) {
         ForecastResponse weather = weatherService.getWeatherByCityName(cityName);
         requestRepository.save(new WeatherRequest());
 
         return weather;
     }
 
-    @GetMapping("/weather/requests")
-    public List<WeatherRequest> getWeatherRequests(){
-        List<WeatherRequest> resultList = (List<WeatherRequest>) requestRepository.findAll();
-
-        return resultList;
+    @GetMapping("weather/requests")
+    public List<WeatherRequest> getWeatherRequests() {
+        return (List<WeatherRequest>) requestRepository.findAll();
     }
 }

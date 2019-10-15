@@ -9,6 +9,6 @@ public class HealthCheckService implements HealthIndicator {
 
     @Override
     public Health health() {
-        return Health.up().status("We cool").build();
+        return Health.up().withDetail("We cool?", "We cool").build();
     }
 }
