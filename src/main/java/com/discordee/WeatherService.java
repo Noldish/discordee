@@ -1,45 +1,33 @@
 package com.discordee;
 
 import com.discordee.client.ForecastClient;
-import com.discordee.config.WeatherCache;
 import com.discordee.dto.City;
 import com.discordee.dto.ForecastResponse;
-import org.infinispan.Cache;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.stereotype.Component;
 
-import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@ApplicationScoped
+@Component
 public class WeatherService {
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
-    @Inject
+    @Autowired
     private ForecastClient forecastClient;
 
-    @Inject
-    @WeatherCache
-    private Cache<String, List<ForecastResponse>> cache;
-
-    @Inject
+    @Autowired
     private List<City> defaultCities;
 
+    @Cacheable("weather")
     public List<ForecastResponse> getWeather() {
-        List<ForecastResponse> cachedValue = cache.get("weather");
-
-        if (cachedValue == null) {
-            List<ForecastResponse> forecastsByCityList = forecastClient.getForecastsByCityList(defaultCities);
-            cache.put("weather", forecastsByCityList);
-            return forecastsByCityList;
-        } else {
-            return cachedValue;
-        }
+        return forecastClient.getForecastsByCityList(defaultCities);
     }
 
     public ForecastResponse getWeatherByCityName(String name) {

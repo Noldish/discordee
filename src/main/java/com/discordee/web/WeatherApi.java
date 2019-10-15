@@ -3,43 +3,36 @@ package com.discordee.web;
 import com.discordee.WeatherService;
 import com.discordee.dto.ForecastResponse;
 import com.discordee.entity.WeatherRequest;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RestController;
 
-import javax.inject.Inject;
 import javax.transaction.Transactional;
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
 import java.util.List;
 
-@Path("/weather")
+@RestController
 public class WeatherApi {
 
-    @Inject
+    @Autowired
     private WeatherService weatherService;
 
-    @Inject
+    @Autowired
     private WeatherRequestRepository requestRepository;
 
-    @GET
-    @Path("/{cityName}")
-    @Produces(MediaType.APPLICATION_JSON)
+    @GetMapping("/weather/{cityName}")
     @Transactional
-    public Response getWeatherByCityName(@PathParam("cityName") String cityName){
+    public ForecastResponse getWeatherByCityName(@PathVariable("cityName") String cityName){
         ForecastResponse weather = weatherService.getWeatherByCityName(cityName);
-        requestRepository.saveRequest(new WeatherRequest());
+        requestRepository.save(new WeatherRequest());
 
-        return Response.ok(weather).build();
+        return weather;
     }
 
-    @GET
-    @Path("/requests")
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response getWeatherRequests(){
-        List<WeatherRequest> resultList = requestRepository.getRequests();
+    @GetMapping("/weather/requests")
+    public List<WeatherRequest> getWeatherRequests(){
+        List<WeatherRequest> resultList = (List<WeatherRequest>) requestRepository.findAll();
 
-        return Response.ok(resultList).build();
+        return resultList;
     }
 }

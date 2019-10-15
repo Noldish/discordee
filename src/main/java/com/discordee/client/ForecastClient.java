@@ -2,27 +2,25 @@ package com.discordee.client;
 
 import com.discordee.dto.City;
 import com.discordee.dto.ForecastResponse;
-import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 import tk.plogitech.darksky.forecast.*;
 import tk.plogitech.darksky.forecast.model.Latitude;
 import tk.plogitech.darksky.forecast.model.Longitude;
 
-import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
 import javax.json.bind.Jsonb;
 import javax.json.bind.JsonbBuilder;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@ApplicationScoped
+@Component
 public class ForecastClient {
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
-    @Inject
-    @ConfigProperty(name = "forecast.key")
+    @Value("${forecast.key}")
     private String forecastKey;
 
     public ForecastResponse getForecast(Double longitude, Double latitude) {

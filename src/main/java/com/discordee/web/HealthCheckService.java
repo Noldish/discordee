@@ -1,17 +1,14 @@
 package com.discordee.web;
 
-import org.eclipse.microprofile.health.Health;
-import org.eclipse.microprofile.health.HealthCheck;
-import org.eclipse.microprofile.health.HealthCheckResponse;
+import org.springframework.boot.actuate.health.Health;
+import org.springframework.boot.actuate.health.HealthIndicator;
+import org.springframework.stereotype.Component;
 
-import javax.enterprise.context.ApplicationScoped;
+@Component
+public class HealthCheckService implements HealthIndicator {
 
-@Health
-@ApplicationScoped
-public class HealthCheckService implements HealthCheck {
-
-    public HealthCheckResponse call() {
-        return HealthCheckResponse.named("healthCheck").withData("foo", "bar").build();
-
+    @Override
+    public Health health() {
+        return Health.up().status("We cool").build();
     }
 }
