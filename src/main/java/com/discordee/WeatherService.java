@@ -1,10 +1,9 @@
 package com.discordee;
 
 import com.discordee.client.ForecastClient;
-import com.discordee.config.WeatherCache;
 import com.discordee.dto.City;
 import com.discordee.dto.ForecastResponse;
-import org.infinispan.Cache;
+import io.quarkus.cache.CacheResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -24,22 +23,11 @@ public class WeatherService {
     private ForecastClient forecastClient;
 
     @Inject
-    @WeatherCache
-    private Cache<String, List<ForecastResponse>> cache;
-
-    @Inject
     private List<City> defaultCities;
 
+    @CacheResult(cacheName = "weather-cache")
     public List<ForecastResponse> getWeather() {
-        List<ForecastResponse> cachedValue = cache.get("weather");
-
-        if (cachedValue == null) {
-            List<ForecastResponse> forecastsByCityList = forecastClient.getForecastsByCityList(defaultCities);
-            cache.put("weather", forecastsByCityList);
-            return forecastsByCityList;
-        } else {
-            return cachedValue;
-        }
+        return forecastClient.getForecastsByCityList(defaultCities);
     }
 
     public ForecastResponse getWeatherByCityName(String name) {

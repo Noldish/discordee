@@ -1,54 +1,34 @@
 package com.discordee;
 
-import com.discordee.client.ForecastClient;
-import com.discordee.config.WeatherCache;
-import com.discordee.dto.City;
-import com.discordee.dto.ForecastResponse;
-import org.infinispan.Cache;
-import org.infinispan.configuration.cache.ConfigurationBuilder;
-import org.infinispan.manager.DefaultCacheManager;
-import org.infinispan.manager.EmbeddedCacheManager;
-import org.jglue.cdiunit.CdiRunner;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.Mock;
-import org.mockito.Mockito;
 
-import javax.enterprise.inject.Produces;
+import com.discordee.mock.ForecastClientMock;
+import io.quarkus.test.junit.QuarkusTest;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+
 import javax.inject.Inject;
-import java.util.Collections;
-import java.util.List;
 
-import static org.mockito.ArgumentMatchers.anyList;
-
-@RunWith(CdiRunner.class)
+@QuarkusTest
 public class WeatherServiceTest {
 
     @Inject
-    WeatherService service;
+    WeatherService weatherService;
 
-    @Produces
-    List<City> defaultCities = Collections.singletonList(new City());
-
-    @Produces
-    @WeatherCache
-    Cache<String, List<ForecastResponse>> cache() {
-        EmbeddedCacheManager cacheManager = new DefaultCacheManager();
-        cacheManager.defineConfiguration("weathercache", new ConfigurationBuilder().build());
-        return cacheManager.getCache("weathercache");
-    }
-
-    @Produces
-    @Mock
-    ForecastClient forecastClient;
-
+    @Inject
+    ForecastClientMock forecastClientMock;
 
     @Test
-    public void forecastClientCalledOnlyOnce() {
+    public void getWeather() {
+        Assertions.assertEquals("Mocked City", weatherService.getWeather().get(0).getCityName());
+    }
+
+    @Test
+    public void getWeather_cacheTest() {
         for (int i = 0; i < 10; i++) {
-            service.getWeather();
+            System.out.println(weatherService.getWeather());
         }
 
-        Mockito.verify(forecastClient, Mockito.times(1)).getForecastsByCityList(anyList());
+        Assertions.assertEquals(1, forecastClientMock.getCounter());
     }
 }
+
