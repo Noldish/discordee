@@ -10,8 +10,12 @@
     <packaging>war</packaging>
 
     <properties>
-        <maven.compiler.source>1.8</maven.compiler.source>
-        <maven.compiler.target>1.8</maven.compiler.target>
+        <compiler-plugin.version>3.8.1</compiler-plugin.version>
+        <maven.compiler.parameters>true</maven.compiler.parameters>
+        <maven.compiler.source>11</maven.compiler.source>
+        <maven.compiler.target>11</maven.compiler.target>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
         <infinispan.version>9.2.4.Final</infinispan.version>
         <cdi-unit-version>4.1.0</cdi-unit-version>
@@ -33,11 +37,9 @@
     <profiles>
         <profile>
             <id>thorntail</id>
-
             <properties>
-                <version.thorntail>2.5.0.Final</version.thorntail>
+                <version.thorntail>2.7.0.Final</version.thorntail>
             </properties>
-
             <build>
                 <plugins>
                     <plugin>
@@ -74,6 +76,12 @@
 
     <build>
         <finalName>discordee</finalName>
+        <plugins>
+            <plugin>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>${compiler-plugin.version}</version>
+            </plugin>
+        </plugins>
     </build>
 
     <dependencies>
@@ -89,7 +97,7 @@
         <dependency>
             <groupId>org.eclipse.microprofile</groupId>
             <artifactId>microprofile</artifactId>
-            <version>2.1</version>
+            <version>3.3</version>
             <type>pom</type>
         </dependency>
 

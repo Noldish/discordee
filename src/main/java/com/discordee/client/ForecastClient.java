@@ -9,10 +9,12 @@ import tk.plogitech.darksky.forecast.*;
 import tk.plogitech.darksky.forecast.model.Latitude;
 import tk.plogitech.darksky.forecast.model.Longitude;
 
+import javax.annotation.PostConstruct;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.json.bind.Jsonb;
 import javax.json.bind.JsonbBuilder;
+import java.util.Base64;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -23,7 +25,15 @@ public class ForecastClient {
 
     @Inject
     @ConfigProperty(name = "forecast.key")
+    String encodedForecastKey;
+
     private String forecastKey;
+
+    @PostConstruct
+    private void init(){
+        byte[] decodedKey = Base64.getDecoder().decode(encodedForecastKey);
+        forecastKey = new String(decodedKey);
+    }
 
     public ForecastResponse getForecast(Double longitude, Double latitude) {
         ForecastRequest request = new ForecastRequestBuilder()
