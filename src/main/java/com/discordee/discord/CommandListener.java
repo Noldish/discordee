@@ -1,6 +1,6 @@
-package com.discordee.listener;
+package com.discordee.discord;
 
-import com.discordee.WeatherService;
+import com.discordee.weather.WeatherService;
 import discord4j.core.DiscordClient;
 import discord4j.core.event.domain.message.MessageCreateEvent;
 import discord4j.core.object.entity.Message;

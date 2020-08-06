@@ -1,4 +1,4 @@
-package com.discordee.entity;
+package com.discordee.weather;
 
 import lombok.Data;
 
@@ -12,7 +12,7 @@ import java.time.LocalDate;
 })
 public class WeatherRequest {
 
-    @Id
+    @Id @GeneratedValue
     private long id;
 
     private LocalDate requestDate;

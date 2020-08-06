@@ -1,8 +1,6 @@
-package com.discordee;
+package com.discordee.discord;
 
-import com.discordee.listener.CommandListener;
 import discord4j.core.DiscordClient;
-import discord4j.core.DiscordClientBuilder;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 
 import javax.annotation.PostConstruct;
@@ -33,9 +31,9 @@ public class DiscordClientProvider {
     private CommandListener mentionListener;
 
     public void init(@Observes @Initialized(ApplicationScoped.class) Object init) {
-        client = new DiscordClientBuilder(token).build();
-        mentionListener.listen(client);
-        client.login().subscribe();
+//        client = new DiscordClientBuilder(token).build();
+//        mentionListener.listen(client);
+//        client.login().subscribe();
     }
 
     @PreDestroy

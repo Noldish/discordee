@@ -1,4 +1,4 @@
-package com.discordee;
+package com.discordee.weather;
 
 import com.discordee.client.ForecastClient;
 import com.discordee.config.WeatherCache;

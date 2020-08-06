@@ -4,6 +4,7 @@ import com.discordee.client.ForecastClient;
 import com.discordee.config.WeatherCache;
 import com.discordee.dto.City;
 import com.discordee.dto.ForecastResponse;
+import com.discordee.weather.WeatherService;
 import org.infinispan.Cache;
 import org.infinispan.configuration.cache.ConfigurationBuilder;
 import org.infinispan.manager.DefaultCacheManager;
