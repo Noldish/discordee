@@ -26,6 +26,12 @@
 
         <failOnMissingWebXml>false</failOnMissingWebXml>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+
+        <discord.token>${discordToken}</discord.token>
+        <forecast.token>${forecastToken}</forecast.token>
+        <postgres.username>${postgresName}</postgres.username>
+        <postgres.password>${postgresPassword}</postgres.password>
+        <postgres.url>${postgresUrl}</postgres.url>
     </properties>
 
     <repositories>
@@ -38,10 +44,28 @@
     <build>
         <finalName>discordee</finalName>
 
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+                <filtering>true</filtering>
+            </resource>
+        </resources>
         <plugins>
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-resources-plugin</artifactId>
+                <version>3.2.0</version>
+                <configuration>
+                    <delimiters>
+                        <delimiter>@</delimiter>
+                    </delimiters>
+                    <useDefaultDelimiters>false</useDefaultDelimiters>
+                </configuration>
             </plugin>
         </plugins>
     </build>
