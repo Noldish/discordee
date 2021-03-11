@@ -1,10 +1,14 @@
 package com.discordee.discord;
 
+import com.discordee.weather.WeatherService;
 import discord4j.core.DiscordClient;
+import discord4j.core.GatewayDiscordClient;
+import discord4j.core.event.domain.message.MessageCreateEvent;
+import discord4j.core.object.entity.Message;
+import discord4j.core.object.entity.channel.MessageChannel;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 
 import javax.annotation.PostConstruct;
-import javax.annotation.PreDestroy;
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.context.Initialized;
 import javax.enterprise.event.Observes;
@@ -13,8 +17,6 @@ import java.util.Base64;
 
 @ApplicationScoped
 public class DiscordClientProvider {
-
-    private DiscordClient client;
 
     @Inject @ConfigProperty(name = "bot.token")
     String encodedForecastKey;
@@ -28,16 +30,19 @@ public class DiscordClientProvider {
     }
 
     @Inject
-    private CommandListener mentionListener;
+    private WeatherService service;
 
     public void init(@Observes @Initialized(ApplicationScoped.class) Object init) {
-//        client = new DiscordClientBuilder(token).build();
-//        mentionListener.listen(client);
-//        client.login().subscribe();
-    }
 
-    @PreDestroy
-    public void destroy() {
-        client.logout().block();
+        final DiscordClient client = DiscordClient.create(token);
+        final GatewayDiscordClient gateway = client.login().block();
+
+        gateway.on(MessageCreateEvent.class).subscribe(event -> {
+            final Message message = event.getMessage();
+            if ("!weather".equals(message.getContent())) {
+                final MessageChannel channel = message.getChannel().block();
+                channel.createMessage(service.getWeatherReport()).block();
+            }
+        });
     }
 }

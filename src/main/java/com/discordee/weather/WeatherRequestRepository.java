@@ -1,7 +1,5 @@
 package com.discordee.weather;
 
-import com.discordee.weather.WeatherRequest;
-
 import javax.enterprise.context.ApplicationScoped;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;

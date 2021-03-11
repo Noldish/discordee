@@ -6,20 +6,8 @@ import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.sse.SseEventSource;
-import java.util.concurrent.Future;
 
 public class RClient {
-
-    public void testAsyncCall() {
-
-        Future<Response> response =
-                ClientBuilder.newClient()
-                        .target("http://localhost:8081/service-url")
-                        .request()
-                        .async()
-                        .get();
-    }
-
 
     @Test
     public void connectToServer() {
