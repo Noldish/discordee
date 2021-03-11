@@ -24,6 +24,15 @@ public class WeatherApi {
     private WeatherRequestRepository requestRepository;
 
     @GET
+    @Path("/")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getWeather(){
+        String weatherReport = weatherService.getWeatherReport();
+
+        return Response.ok(weatherReport).build();
+    }
+
+    @GET
     @Path("/{cityName}")
     @Produces(MediaType.APPLICATION_JSON)
     @Transactional

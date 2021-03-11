@@ -1,10 +1,12 @@
 package com.discordee.dto;
 
+import io.quarkus.runtime.annotations.RegisterForReflection;
 import lombok.Data;
 
 import java.io.Serializable;
 
 @Data
+@RegisterForReflection
 public class Currently implements Serializable {
     private Integer time;
     private String summary;
