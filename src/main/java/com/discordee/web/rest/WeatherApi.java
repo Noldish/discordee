@@ -1,15 +1,17 @@
 package com.discordee.web.rest;
 
-import com.discordee.weather.WeatherService;
 import com.discordee.dto.ForecastResponse;
 import com.discordee.weather.WeatherRequest;
 import com.discordee.weather.WeatherRequestRepository;
+import com.discordee.weather.WeatherService;
 import org.eclipse.microprofile.metrics.MetricUnits;
 import org.eclipse.microprofile.metrics.annotation.Counted;
 import org.eclipse.microprofile.metrics.annotation.Timed;
 
 import javax.enterprise.event.Event;
 import javax.inject.Inject;
+import javax.json.bind.Jsonb;
+import javax.json.bind.JsonbBuilder;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
@@ -49,6 +51,9 @@ public class WeatherApi {
     public Response getWeatherRequests() {
         List<WeatherRequest> resultList = requestRepository.getRequests();
 
-        return Response.ok(resultList).build();
+        Jsonb jsonb = JsonbBuilder.create();
+        String response = jsonb.toJson(resultList);
+
+        return Response.ok(response).build();
     }
 }
