@@ -12,6 +12,7 @@ import tk.plogitech.darksky.forecast.model.Longitude;
 
 import javax.json.bind.Jsonb;
 import javax.json.bind.JsonbBuilder;
+import java.util.Base64;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -25,7 +26,7 @@ public class ForecastClient {
 
     public ForecastResponse getForecast(Double longitude, Double latitude) {
         ForecastRequest request = new ForecastRequestBuilder()
-                .key(new APIKey(forecastKey))
+                .key(new APIKey(new String(Base64.getDecoder().decode(forecastKey))))
                 .language(ForecastRequestBuilder.Language.ru)
                 .exclude(ForecastRequestBuilder.Block.daily, ForecastRequestBuilder.Block.hourly,
                         ForecastRequestBuilder.Block.flags)
