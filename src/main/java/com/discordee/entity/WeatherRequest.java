@@ -13,6 +13,7 @@ import java.time.LocalDate;
 public class WeatherRequest {
 
     @Id
+    @GeneratedValue
     private long id;
 
     private LocalDate requestDate;
