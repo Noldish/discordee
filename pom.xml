@@ -12,22 +12,19 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>2.3.5.RELEASE</version>
+        <version>2.5.5</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
 
     <properties>
-        <maven.compiler.source>11</maven.compiler.source>
-        <maven.compiler.target>11</maven.compiler.target>
+        <maven.compiler.source>17</maven.compiler.source>
+        <maven.compiler.target>17</maven.compiler.target>
 
         <infinispan.version>9.2.4.Final</infinispan.version>
-
-        <version.h2>1.4.187</version.h2>
 
         <failOnMissingWebXml>false</failOnMissingWebXml>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
-        <discord.token>${discordToken}</discord.token>
         <forecast.token>${forecastToken}</forecast.token>
         <postgres.username>${postgresName}</postgres.username>
         <postgres.password>${postgresPassword}</postgres.password>
@@ -121,15 +118,6 @@
             <version>1.1</version>
         </dependency>
 
-        <!--    TECHNICAL-->
-
-        <dependency>
-            <groupId>org.projectlombok</groupId>
-            <artifactId>lombok</artifactId>
-            <version>1.18.8</version>
-            <scope>provided</scope>
-        </dependency>
-
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
@@ -144,23 +132,6 @@
             <version>2.1.0</version>
         </dependency>
 
-
-        <!--    TESTING-->
-
-
-        <dependency>
-            <groupId>org.mockito</groupId>
-            <artifactId>mockito-core</artifactId>
-            <version>2.28.2</version>
-            <scope>test</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>4.12</version>
-            <scope>test</scope>
-        </dependency>
     </dependencies>
 
 
