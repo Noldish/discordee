@@ -1,0 +1,10 @@
+
+FROM openjdk:17
+COPY target/quarkus-app/lib/ /usr/src/myapp/deployments/lib/
+COPY target/quarkus-app/*.jar /usr/src/myapp/deployments/
+COPY target/quarkus-app/app/ /usr/src/myapp/deployments/app/
+COPY target/quarkus-app/quarkus/ /usr/src/myapp/deployments/quarkus/
+WORKDIR /usr/src/myapp
+EXPOSE 8080
+
+ENTRYPOINT ["java","-jar","deployments/quarkus-run.jar"]
